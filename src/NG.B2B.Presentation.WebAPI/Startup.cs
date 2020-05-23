@@ -3,10 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using NG.B2B.Business.Library.IoCModule;
-using System;
-using System.IO;
+using NG.Common.Presentation.Extensions;
+using NG.Common.Presentation.Filters;
 using System.Reflection;
 
 namespace NG.B2B.Presentation.WebAPI
@@ -25,12 +24,14 @@ namespace NG.B2B.Presentation.WebAPI
         {
             services.AddControllers();
 
-            services.AddSwaggerGen(c =>
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            services.AddSwaggerDocumentation(Configuration.GetSection("Documentation"), xmlFile);
+
+            services.AddJwtAuthentication(Configuration.GetSection("Secrets"));
+
+            services.AddMvc(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "NG.B2B", Version = "v1", });
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                options.Filters.Add(typeof(ApiExceptionFilter));
             });
 
             services.AddBusinessServices();
@@ -44,16 +45,13 @@ namespace NG.B2B.Presentation.WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "NotGuiriAPI");
-            });
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseSwaggerDocumentation(Configuration.GetSection("Documentation"));
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NG.B2B.Business.Contract;
+using NG.DBManager.Infrastructure.Contracts.UnitsOfWork;
 using NG.DBManager.Infrastructure.Impl.EF.IoCModule;
+using NG.DBManager.Infrastructure.Impl.EF.UnitsOfWork;
 using System;
 
 namespace NG.B2B.Business.Library.IoCModule
@@ -16,6 +18,7 @@ namespace NG.B2B.Business.Library.IoCModule
             }
 
             services.AddInfrastructureServices()
+                    .AddScoped<IB2BUnitOfWork, B2BUnitOfWork>()
                     .AddScoped<ICouponService, CouponService>();
 
             return services;

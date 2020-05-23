@@ -1,36 +1,36 @@
 ﻿using NG.B2B.Business.Contract;
-using NG.DBManager.Infrastructure.Contracts.Models;
 using NG.DBManager.Infrastructure.Contracts.UnitsOfWork;
 using System;
+using System.Threading.Tasks;
 
 namespace NG.B2B.Business.Library
 {
     public class CouponService : ICouponService
     {
-        public readonly IUnitOfWork _unitOfWork;
-        public CouponService(IUnitOfWork unitOfWork)
+        public readonly IB2BUnitOfWork _unitOfWork;
+        public CouponService(IB2BUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public bool Validate(Guid couponId)
+        public async Task<bool> ValidateAsync(Guid couponId)
         {
-            var existingCoupon = _unitOfWork.Repository<Coupon>().Get(couponId);
+            var existingCoupon = _unitOfWork.Coupon.Get(couponId);
 
-            if (existingCoupon != null)
+            if (existingCoupon == null)
             {
                 return false;
             }
 
-            if (existingCoupon.IsRedeemed)
+            if (existingCoupon.IsValidated)
             {
                 //throw new Exception("Coupon already redeemed");             
                 return false;
             }
             // if existingCoupon.Created > 24DaysAgo then false
-            existingCoupon.Redemption = DateTime.Now;
+            existingCoupon.ValidationDate = DateTime.Now;
 
-            return _unitOfWork.Commit() == 1;
+            return await _unitOfWork.CommitAsync() == 1;
         }
     }
 }

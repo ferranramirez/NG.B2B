@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -8,13 +8,37 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Label="Startup">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc2" />
+  </ItemGroup>
+
+  <ItemGroup Label="Serilog">
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NG.B2B.Business.Contract\NG.B2B.Business.Contract.csproj" />
     <ProjectReference Include="..\NG.B2B.Business.Library\NG.B2B.Business.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="NG.Common.Business">
+      <HintPath>..\..\..\NG.Common\src\NG.Common.Presentation\bin\Debug\netcoreapp3.1\NG.Common.Business.dll</HintPath>
+    </Reference>
+    <Reference Include="NG.Common.Presentation">
+      <HintPath>..\..\..\NG.Common\src\NG.Common.Presentation\bin\Debug\netcoreapp3.1\NG.Common.Presentation.dll</HintPath>
+    </Reference>
+    <Reference Include="NG.DBManager.Infrastructure.Contracts">
+      <HintPath>..\..\..\NG.DBManager\src\NG.DBManager.Infrastructure.Impl.EF\bin\Debug\netcoreapp3.1\NG.DBManager.Infrastructure.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="NG.DBManager.Infrastructure.Impl.EF">
+      <HintPath>..\..\..\NG.DBManager\src\NG.DBManager.Infrastructure.Impl.EF\bin\Debug\netcoreapp3.1\NG.DBManager.Infrastructure.Impl.EF.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 
