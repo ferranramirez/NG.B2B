@@ -1,4 +1,5 @@
 ﻿using NG.B2B.Business.Contract;
+using NG.Common.Business.BusinessExceptions;
 using NG.DBManager.Infrastructure.Contracts.UnitsOfWork;
 using System;
 using System.Threading.Tasks;
@@ -19,15 +20,15 @@ namespace NG.B2B.Business.Library
 
             if (existingCoupon == null)
             {
-                return false;
+                throw new NotGuiriBusinessException("Coupon does not exist", 103);
             }
 
             if (existingCoupon.IsValidated)
             {
-                //throw new Exception("Coupon already redeemed");             
-                return false;
+                throw new NotGuiriBusinessException("Coupon already redeemed", 104);
             }
             // if existingCoupon.Created > 24DaysAgo then false
+            // throw new NotGuiriBusinessException("Coupon outdated", 105);
             existingCoupon.ValidationDate = DateTime.Now;
 
             return await _unitOfWork.CommitAsync() == 1;

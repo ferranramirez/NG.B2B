@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NG.B2B.Business.Contract;
+using NG.Common.Presentation.Filters;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace NG.B2B.Presentation.WebAPI.Controllers
@@ -16,17 +18,21 @@ namespace NG.B2B.Presentation.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Retrieve a boolean indicating if the Coupon could be validated
+        /// Validate an already existing coupon
         /// </summary>
         /// <param name="Id">The Id of the Coupon to validate</param>
         /// <remarks>
         /// ## Response code meanings
-        /// - 200 - Tour successfully retrieved
+        /// - 200 - Coupon successfully validated.
+        /// - 400 - The model is not properly built.
         /// - 500 - An internal server error. Something bad and unexpected happened.
-        /// - 543 - An internal server error. Something bad and unexpected happened.
+        /// - 543 - A handled error. This error was expected, check the message.
         /// </remarks>
         /// <returns>A bool</returns>
         [HttpGet("{Id}")]
+        [ProducesResponseType(typeof(ApiError), 543)]
+        [ProducesResponseType(typeof(ApiError), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Validate(Guid Id)
         {
             if (!ModelState.IsValid)
