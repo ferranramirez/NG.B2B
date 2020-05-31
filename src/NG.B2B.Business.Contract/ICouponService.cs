@@ -1,10 +1,11 @@
-﻿using System;
+﻿using NG.DBManager.Infrastructure.Contracts.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace NG.B2B.Business.Contract
 {
     public interface ICouponService
     {
-        Task<bool> ValidateAsync(Guid couponId);
+        Task<Coupon> ValidateAsync(Guid couponId, Guid commerceUserId);
     }
 }

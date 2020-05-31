@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NG.B2B.Business.Contract;
-using NG.Common.Presentation.Filters;
+using NG.Common.Library.Filters;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 namespace NG.B2B.Presentation.WebAPI.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "Commerce")]
     [Route("[controller]")]
     public class CouponController : ControllerBase
     {
@@ -29,20 +31,15 @@ namespace NG.B2B.Presentation.WebAPI.Controllers
         /// - 543 - A handled error. This error was expected, check the message.
         /// </remarks>
         /// <returns>A bool</returns>
-        [HttpGet("{Id}")]
+        [AuthUserIdFromToken]
+        [HttpPut("{CouponId}")]
         [ProducesResponseType(typeof(ApiError), 543)]
         [ProducesResponseType(typeof(ApiError), (int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Validate(Guid Id)
+        public async Task<IActionResult> Validate(Guid CouponId,
+            Guid AuthUserId = default /* Got from the [AuthUserIdFromToken] filter */)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var response = await _couponService.ValidateAsync(Id);
-
-            return Ok(response);
+            return Ok(await _couponService.ValidateAsync(CouponId, AuthUserId));
         }
     }
 }

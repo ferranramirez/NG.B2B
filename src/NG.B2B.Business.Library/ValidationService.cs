@@ -1,5 +1,5 @@
 ﻿using NG.B2B.Business.Contract;
-using NG.Common.Business.BusinessExceptions;
+using NG.Common.Library.Exceptions;
 using NG.DBManager.Infrastructure.Contracts.UnitsOfWork;
 using System;
 using System.Threading.Tasks;
