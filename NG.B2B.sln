@@ -15,9 +15,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{6D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NG.B2B.Business.Contract", "src\NG.B2B.Business.Contract\NG.B2B.Business.Contract.csproj", "{80DC7A30-E028-4B38-809D-9ACEFAAED075}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NG.B2B.Business.Impl", "src\NG.B2B.Business.Impl\NG.B2B.Business.Impl.csproj", "{A9537937-D739-4D93-A1F7-45E9B678F00D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NG.B2B.Business.Impl", "src\NG.B2B.Business.Impl\NG.B2B.Business.Impl.csproj", "{A9537937-D739-4D93-A1F7-45E9B678F00D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NG.B2B.Test.UnitTest", "tst\NG.B2B.Test.UnitTest\NG.B2B.Test.UnitTest.csproj", "{D6966042-C8A9-4F64-844C-AF0ED9B5A48A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NG.B2B.Test.UnitTest", "tst\NG.B2B.Test.UnitTest\NG.B2B.Test.UnitTest.csproj", "{D6966042-C8A9-4F64-844C-AF0ED9B5A48A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{270ED508-84B3-43E6-B249-A5D875842EF4}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

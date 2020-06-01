@@ -22,7 +22,8 @@ namespace NG.B2B.Presentation.WebAPI.Controllers
         /// <summary>
         /// Validate an already existing coupon
         /// </summary>
-        /// <param name="Id">The Id of the Coupon to validate</param>
+        /// <param name="CouponId">The Id of the Coupon to validate</param>
+        /// <param name="AuthUserId">This value is ignored. The userId is constructed from the authorization token</param>
         /// <remarks>
         /// ## Response code meanings
         /// - 200 - Coupon successfully validated.
