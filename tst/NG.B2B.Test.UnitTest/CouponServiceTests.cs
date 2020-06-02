@@ -59,7 +59,7 @@ namespace NG.B2B.Test.UnitTest
             var actual = await _couponService.ValidateAsync(couponId, commerceId);
 
             // Assert
-            Assert.True(actual);
+            Assert.NotNull(actual);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace NG.B2B.Test.UnitTest
             coupon.ValidationDate = DateTime.Now;
 
             // Act
-            async Task action() => await _couponService.ValidateAsync(couponId, commerceId: Guid.Empty);
+            async Task action() => await _couponService.ValidateAsync(couponId, commerceUserId: Guid.Empty);
 
             // Assert
             var exception = await Assert.ThrowsAsync<NotGuiriBusinessException>(action);

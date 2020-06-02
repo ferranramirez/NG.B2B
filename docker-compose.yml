@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  ngb2b:
+    container_name: ngb2b
+    build:
+      context: .
+      args: 
+        - "PAT=${PAT}"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+    ports: 
+      - "8084:80"
+    networks:
+      - local
+
+networks:
+  local:
+    external: true

@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NG.B2B.Business.Impl.IoCModule;
-using NG.B2B.Business.Library.IoCModule;
 using NG.Common.Library.Extensions;
 using NG.Common.Library.Filters;
 using System.Reflection;

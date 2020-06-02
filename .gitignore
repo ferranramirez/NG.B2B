@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+.env
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -110,6 +111,7 @@ ipch/
 
 # Visual Studio Trace Files
 *.e2e
+!*Test.e2e
 
 # TFS 2012 Local Workspace
 $tf/
