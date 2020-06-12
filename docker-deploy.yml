@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  b2b:
+    image: registry.gitlab.com/notguiri/b2b:master
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+    ports: 
+      - "8084:80"
+    networks:
+      - backend
+
+networks:
+  backend:
+    external: true

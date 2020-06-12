@@ -18,17 +18,17 @@ namespace NG.B2B.Test.UnitTest
         private ICouponService _couponService;
         private Coupon coupon;
         private Guid couponId;
-        private Guid commerceId;
+        private Guid commerceUserId;
 
         public CouponServiceTests()
         {
             couponId = Guid.NewGuid();
-            commerceId = Guid.NewGuid();
+            commerceUserId = Guid.NewGuid();
             var userId = Guid.NewGuid();
             coupon = new Coupon()
             {
                 Id = couponId,
-                CommerceId = commerceId,
+                CommerceId = commerceUserId,
                 UserId = userId,
                 Content = "{ Coupon content }",
                 GenerationDate = DateTime.Now
@@ -53,10 +53,17 @@ namespace NG.B2B.Test.UnitTest
         {
             // Arrange
             _unitOfWorkMock.Setup(uow => uow.Coupon.Get(couponId)).Returns(coupon);
-            _unitOfWorkMock.Setup(uow => uow.CommitAsync()).Returns(Task.FromResult(1));
+            var coupons = new List<Coupon>();
+            coupons.Add(coupon);
+            coupons.Add(coupon);
+            coupons.Add(coupon);
+            coupons.Add(coupon);
+            _unitOfWorkMock.Setup(uow => uow.Coupon
+                .Find(c => c.Id == couponId
+                    && c.Commerce.UserId == commerceUserId)).Returns(coupons);
 
             // Act
-            var actual = await _couponService.ValidateAsync(couponId, commerceId);
+            var actual = await _couponService.ValidateAsync(couponId, commerceUserId);
 
             // Assert
             Assert.NotNull(actual);
@@ -70,7 +77,7 @@ namespace NG.B2B.Test.UnitTest
             coupon.ValidationDate = DateTime.Now;
 
             // Act
-            async Task action() => await _couponService.ValidateAsync(couponId, commerceId);
+            async Task action() => await _couponService.ValidateAsync(couponId, commerceUserId);
 
             // Assert
             var exception = await Assert.ThrowsAsync<NotGuiriBusinessException>(action);
@@ -82,7 +89,6 @@ namespace NG.B2B.Test.UnitTest
         {
             // Arrange
             _unitOfWorkMock.Setup(uow => uow.Coupon.Get(couponId)).Returns(coupon);
-            coupon.ValidationDate = DateTime.Now;
 
             // Act
             async Task action() => await _couponService.ValidateAsync(couponId, commerceUserId: Guid.Empty);
@@ -96,11 +102,15 @@ namespace NG.B2B.Test.UnitTest
         public async Task Validate_GivesAlreadyValidatedCoupon_ThrowsAlreadyValidatedCoupon()
         {
             // Arrange
-            _unitOfWorkMock.Setup(uow => uow.Coupon.Get(couponId)).Returns(coupon);
             coupon.ValidationDate = DateTime.Now;
+            _unitOfWorkMock.Setup(uow => uow.Coupon.Get(couponId)).Returns(coupon);
+            var coupons = new List<Coupon> { coupon };
+            _unitOfWorkMock.Setup(uow => uow.Coupon
+                .Find(c => c.Id == couponId
+                    && c.Commerce.UserId == commerceUserId)).Returns(coupons);
 
             // Act
-            async Task action() => await _couponService.ValidateAsync(couponId, commerceId).ConfigureAwait(false);
+            async Task action() => await _couponService.ValidateAsync(couponId, commerceUserId).ConfigureAwait(false);
 
             // Assert
             var exception = await Assert.ThrowsAsync<NotGuiriBusinessException>(action);
@@ -113,9 +123,13 @@ namespace NG.B2B.Test.UnitTest
             // Arrange
             _unitOfWorkMock.Setup(uow => uow.Coupon.Get(couponId)).Returns(coupon);
             coupon.GenerationDate = coupon.GenerationDate.AddMonths(-2);
+            var coupons = new List<Coupon> { coupon };
+            _unitOfWorkMock.Setup(uow => uow.Coupon
+                .Find(c => c.Id == couponId
+                    && c.Commerce.UserId == commerceUserId)).Returns(coupons);
 
             // Act
-            async Task action() => await _couponService.ValidateAsync(couponId, commerceId).ConfigureAwait(false);
+            async Task action() => await _couponService.ValidateAsync(couponId, commerceUserId).ConfigureAwait(false);
 
             // Assert
             var exception = await Assert.ThrowsAsync<NotGuiriBusinessException>(action);
