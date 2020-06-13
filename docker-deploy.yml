@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   b2b:
-    image: registry.gitlab.com/notguiri/b2b:master
+    image: registry.gitlab.com/notguiri/b2b:#{IMG_TAG}#
     deploy:
       # replicas: 2
       restart_policy:
