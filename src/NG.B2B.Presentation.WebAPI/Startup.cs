@@ -27,6 +27,8 @@ namespace NG.B2B.Presentation.WebAPI
                 options.Filters.Add(typeof(ApiExceptionFilter));
             });
 
+            services.AddHealthCheckMiddleware(Configuration);
+
             services.AddControllers();
 
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -40,9 +42,11 @@ namespace NG.B2B.Presentation.WebAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
+
             app.UseErrorDisplayMiddleware();
 
-            if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
+            app.UseHealthCheckMiddleware();
 
             app.UseHttpsRedirection();
 
