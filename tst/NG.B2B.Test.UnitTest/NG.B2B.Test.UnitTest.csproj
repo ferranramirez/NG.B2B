@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup Label="NotGuiri Nuget">
-    <PackageReference Include="NG.Common.Library" Version="1.0.3" />
+    <PackageReference Include="NG.Common.Library" Version="1.0.4" />
     <PackageReference Include="NG.DBManager.Infrastructure.Contracts" Version="1.0.1" />
     <PackageReference Include="NG.DBManager.Infrastructure.Impl.EF" Version="1.0.1" />
   </ItemGroup>
