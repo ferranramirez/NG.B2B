@@ -4,7 +4,7 @@ using NG.B2B.Business.Contract;
 using NG.Common.Library.Exceptions;
 using NG.Common.Services.Token;
 using NG.DBManager.Infrastructure.Contracts.UnitsOfWork;
-using NG.DBManager.Infrastructure.Impl.EF.IoCModule;
+using NG.DBManager.Infrastructure.Impl.EF.Extensions;
 using NG.DBManager.Infrastructure.Impl.EF.UnitsOfWork;
 using System;
 using System.Collections.Generic;

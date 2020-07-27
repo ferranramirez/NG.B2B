@@ -15,7 +15,8 @@ namespace NG.B2B.Business.Impl
         public readonly IB2BUnitOfWork _unitOfWork;
         private readonly Dictionary<BusinessErrorType, BusinessErrorObject> _errors;
 
-        public CouponService(IB2BUnitOfWork unitOfWork,
+        public CouponService(
+            IB2BUnitOfWork unitOfWork,
             IOptions<Dictionary<BusinessErrorType, BusinessErrorObject>> errors)
         {
             _unitOfWork = unitOfWork;
@@ -32,12 +33,9 @@ namespace NG.B2B.Business.Impl
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
             }
 
-            var commerceUserIdIsRight = _unitOfWork.Coupon
-                .Find(c => c.Id == couponId
-                    && c.Commerce.UserId == commerceUserId)
-                .Any();
+            var commerces = _unitOfWork.Commerce.Find(c => c.UserId == commerceUserId);
 
-            if (!commerceUserIdIsRight)
+            if (!commerces.Any())
             {
                 var error = _errors[BusinessErrorType.WrongCommerce];
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
