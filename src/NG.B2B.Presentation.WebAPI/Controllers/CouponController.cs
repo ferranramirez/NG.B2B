@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace NG.B2B.Presentation.WebAPI.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Commerce")]
+    [Authorize(Roles = "Commerce, Admin")]
     [Route("[controller]")]
     public class CouponController : ControllerBase
     {
