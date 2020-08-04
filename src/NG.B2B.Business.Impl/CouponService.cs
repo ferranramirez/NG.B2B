@@ -5,7 +5,6 @@ using NG.DBManager.Infrastructure.Contracts.Models;
 using NG.DBManager.Infrastructure.Contracts.UnitsOfWork;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace NG.B2B.Business.Impl
@@ -33,9 +32,14 @@ namespace NG.B2B.Business.Impl
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
             }
 
-            var commerces = _unitOfWork.Commerce.Find(c => c.UserId == commerceUserId);
+            //var commerces = await _unitOfWork.Commerce.GetAll(c => c.Location);
+            //var nodes = commerces.Select(c => c.Location.Nodes);
+            //var foo = nodes.Where(n => n.Any(n2 => n2.Id == coupon.NodeId));
 
-            if (!commerces.Any())
+
+            var commerce = _unitOfWork.Coupon.GetCommerce(couponId);
+
+            if (commerce?.UserId != commerceUserId)
             {
                 var error = _errors[BusinessErrorType.WrongCommerce];
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
