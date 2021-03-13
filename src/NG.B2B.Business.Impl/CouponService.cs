@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using NG.B2B.Business.Contract;
 using NG.Common.Library.Exceptions;
+using NG.DBManager.Infrastructure.Contracts.Entities;
 using NG.DBManager.Infrastructure.Contracts.Models;
+using NG.DBManager.Infrastructure.Contracts.Models.Enums;
 using NG.DBManager.Infrastructure.Contracts.UnitsOfWork;
 using System;
 using System.Collections.Generic;
@@ -32,14 +34,10 @@ namespace NG.B2B.Business.Impl
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
             }
 
-            //var commerces = await _unitOfWork.Commerce.GetAll(c => c.Location);
-            //var nodes = commerces.Select(c => c.Location.Nodes);
-            //var foo = nodes.Where(n => n.Any(n2 => n2.Id == coupon.NodeId));
-
-
             var commerce = _unitOfWork.Coupon.GetCommerce(couponId);
+            var user = _unitOfWork.User.Get(commerceUserId);
 
-            if (commerce?.UserId != commerceUserId)
+            if (user.Role != Role.Admin && commerce?.UserId != commerceUserId)
             {
                 var error = _errors[BusinessErrorType.WrongCommerce];
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
@@ -64,5 +62,23 @@ namespace NG.B2B.Business.Impl
 
             return _unitOfWork.Coupon.Get(couponId);
         }
+
+
+        public async Task<IEnumerable<CouponInfo>> GetByCommerce(Guid commerceId, Guid commerceUserId, Guid authUserId)
+        {
+            var user = _unitOfWork.User.Get(authUserId);
+
+            var wrongCommerce = !(user.Role == Role.Admin || (user.Role == Role.Commerce && commerceUserId == authUserId));
+
+            if (wrongCommerce
+                && _unitOfWork.User.ContainsCommerce(commerceUserId, commerceId))
+            {
+                var error = _errors[BusinessErrorType.WrongCommerce];
+                throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
+            }
+
+            return await _unitOfWork.Coupon.GetByCommerce(commerceId);
+        }
+
     }
 }
