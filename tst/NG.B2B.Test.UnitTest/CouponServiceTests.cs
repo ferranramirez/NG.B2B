@@ -93,8 +93,16 @@ namespace NG.B2B.Test.UnitTest
             var commerces = new List<Commerce>();
             _unitOfWorkMock.Setup(uow => uow.Commerce.Find(c => c.UserId == commerceUserId)).Returns(commerces);
 
+
+            var commerce = new Commerce() { Id = Guid.NewGuid(), UserId = commerceUserId };
+            _unitOfWorkMock.Setup(uow => uow.Coupon.GetCommerce(couponId)).Returns(commerce);
+
+            var user = new User() { Id = Guid.NewGuid(), Role = DBManager.Infrastructure.Contracts.Models.Enums.Role.Commerce };
+            _unitOfWorkMock.Setup(uow => uow.User.Get(user.Id)).Returns(user);
+
+
             // Act
-            async Task action() => await _couponService.ValidateAsync(couponId, authUserId: Guid.Empty);
+            async Task action() => await _couponService.ValidateAsync(couponId, authUserId: user.Id);
 
             // Assert
             var exception = await Assert.ThrowsAsync<NotGuiriBusinessException>(action);
