@@ -94,7 +94,7 @@ namespace NG.B2B.Test.UnitTest
             _unitOfWorkMock.Setup(uow => uow.Commerce.Find(c => c.UserId == commerceUserId)).Returns(commerces);
 
             // Act
-            async Task action() => await _couponService.ValidateAsync(couponId, commerceUserId: Guid.Empty);
+            async Task action() => await _couponService.ValidateAsync(couponId, authUserId: Guid.Empty);
 
             // Assert
             var exception = await Assert.ThrowsAsync<NotGuiriBusinessException>(action);

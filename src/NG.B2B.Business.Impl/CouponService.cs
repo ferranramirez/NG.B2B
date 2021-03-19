@@ -70,11 +70,21 @@ namespace NG.B2B.Business.Impl
 
             var wrongCommerce = !(user.Role == Role.Admin || (user.Role == Role.Commerce && commerceUserId == authUserId));
 
-            if (wrongCommerce
-                && _unitOfWork.User.ContainsCommerce(commerceUserId, commerceId))
+            if (wrongCommerce)
             {
-                var error = _errors[BusinessErrorType.WrongCommerce];
-                throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
+                bool? containsCommerce = _unitOfWork.User.ContainsCommerce(commerceUserId, commerceId);
+
+                if (containsCommerce == null)
+                {
+                    var error = _errors[BusinessErrorType.WrongData];
+                    throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
+                }
+
+                if (containsCommerce.Value)
+                {
+                    var error = _errors[BusinessErrorType.WrongCommerce];
+                    throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
+                }
             }
 
             return await _unitOfWork.Coupon.GetByCommerce(commerceId);
