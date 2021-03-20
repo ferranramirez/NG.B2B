@@ -24,7 +24,7 @@ namespace NG.B2B.Business.Impl
             _errors = errors.Value;
         }
 
-        public async Task<Coupon> ValidateAsync(Guid couponId, Guid commerceUserId)
+        public async Task<Coupon> ValidateAsync(Guid couponId, Guid authUserId)
         {
             var coupon = _unitOfWork.Coupon.Get(couponId);
 
@@ -35,9 +35,14 @@ namespace NG.B2B.Business.Impl
             }
 
             var commerce = _unitOfWork.Coupon.GetCommerce(couponId);
-            var user = _unitOfWork.User.Get(commerceUserId);
+            var user = _unitOfWork.User.Get(authUserId);
 
-            if (user.Role != Role.Admin && commerce?.UserId != commerceUserId)
+            var isAdmin = user.Role == Role.Admin;
+            var isRightCommerce = user.Role == Role.Commerce && commerce?.UserId == authUserId;
+            var isRightUser = coupon.UserId == authUserId;
+            var wrongCommerce = !(isAdmin || isRightCommerce || isRightUser);
+
+            if (wrongCommerce)
             {
                 var error = _errors[BusinessErrorType.WrongCommerce];
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
@@ -56,6 +61,7 @@ namespace NG.B2B.Business.Impl
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
             }
 
+            coupon.ValidatorId = authUserId;
             coupon.ValidationDate = currentDate;
             _unitOfWork.Coupon.Update(coupon);
             await _unitOfWork.CommitAsync();

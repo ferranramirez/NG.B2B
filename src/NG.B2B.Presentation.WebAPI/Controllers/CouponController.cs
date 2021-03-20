@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace NG.B2B.Presentation.WebAPI.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Commerce, Admin")]
+    [Authorize]
     [Route("[controller]")]
     public class CouponController : ControllerBase
     {
@@ -57,6 +57,7 @@ namespace NG.B2B.Presentation.WebAPI.Controllers
         /// </remarks>
         /// <returns>A bool</returns>
         [AuthUserIdFromToken]
+        [Authorize(Roles = "Commerce, Admin")]
         [HttpGet("{CommerceId}/{CommerceUserId}")]
         [ProducesResponseType(typeof(ApiError), 543)]
         [ProducesResponseType(typeof(ApiError), (int)HttpStatusCode.InternalServerError)]
