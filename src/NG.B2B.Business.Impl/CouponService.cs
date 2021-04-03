@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using NG.B2B.Business.Contract;
 using NG.Common.Library.Exceptions;
+using NG.DBManager.Infrastructure.Contracts.Entities;
 using NG.DBManager.Infrastructure.Contracts.Models;
+using NG.DBManager.Infrastructure.Contracts.Models.Enums;
 using NG.DBManager.Infrastructure.Contracts.UnitsOfWork;
 using System;
 using System.Collections.Generic;
@@ -22,7 +24,7 @@ namespace NG.B2B.Business.Impl
             _errors = errors.Value;
         }
 
-        public async Task<Coupon> ValidateAsync(Guid couponId, Guid commerceUserId)
+        public async Task<Coupon> ValidateAsync(Guid couponId, Guid authUserId)
         {
             var coupon = _unitOfWork.Coupon.Get(couponId);
 
@@ -32,14 +34,15 @@ namespace NG.B2B.Business.Impl
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
             }
 
-            //var commerces = await _unitOfWork.Commerce.GetAll(c => c.Location);
-            //var nodes = commerces.Select(c => c.Location.Nodes);
-            //var foo = nodes.Where(n => n.Any(n2 => n2.Id == coupon.NodeId));
-
-
             var commerce = _unitOfWork.Coupon.GetCommerce(couponId);
+            var user = _unitOfWork.User.Get(authUserId);
 
-            if (commerce?.UserId != commerceUserId)
+            var isAdmin = user.Role == Role.Admin;
+            var isRightCommerce = user.Role == Role.Commerce && commerce?.UserId == authUserId;
+            var isRightUser = coupon.UserId == authUserId;
+            var wrongCommerce = !(isAdmin || isRightCommerce || isRightUser);
+
+            if (wrongCommerce)
             {
                 var error = _errors[BusinessErrorType.WrongCommerce];
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
@@ -58,11 +61,40 @@ namespace NG.B2B.Business.Impl
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
             }
 
+            coupon.ValidatorId = authUserId;
             coupon.ValidationDate = currentDate;
             _unitOfWork.Coupon.Update(coupon);
             await _unitOfWork.CommitAsync();
 
             return _unitOfWork.Coupon.Get(couponId);
         }
+
+
+        public async Task<IEnumerable<CouponInfo>> GetByCommerce(Guid commerceId, Guid commerceUserId, Guid authUserId)
+        {
+            var user = _unitOfWork.User.Get(authUserId);
+
+            var wrongCommerce = !(user.Role == Role.Admin || (user.Role == Role.Commerce && commerceUserId == authUserId));
+
+            if (wrongCommerce)
+            {
+                bool? containsCommerce = _unitOfWork.User.ContainsCommerce(commerceUserId, commerceId);
+
+                if (containsCommerce == null)
+                {
+                    var error = _errors[BusinessErrorType.WrongData];
+                    throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
+                }
+
+                if (containsCommerce.Value)
+                {
+                    var error = _errors[BusinessErrorType.WrongCommerce];
+                    throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
+                }
+            }
+
+            return await _unitOfWork.Coupon.GetByCommerce(commerceId);
+        }
+
     }
 }
