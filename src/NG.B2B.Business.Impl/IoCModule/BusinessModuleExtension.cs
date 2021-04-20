@@ -25,6 +25,7 @@ namespace NG.B2B.Business.Impl.IoCModule
             services.AddInfrastructureServices()
                     .AddScoped<IB2BUnitOfWork, B2BUnitOfWork>()
                     .AddScoped<ICouponService, CouponService>()
+                    .AddScoped<IVisitService, VisitService>()
                     .AddSingleton<ITokenService, TokenService>()
                     .Configure<Dictionary<BusinessErrorType, BusinessErrorObject>>(x => configuration.GetSection("Errors").Bind(x));
 

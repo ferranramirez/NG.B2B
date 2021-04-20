@@ -95,6 +95,5 @@ namespace NG.B2B.Business.Impl
 
             return await _unitOfWork.Coupon.GetByCommerce(commerceId);
         }
-
     }
 }
