@@ -23,17 +23,27 @@ namespace NG.B2B.Business.Impl
             _errors = errors.Value;
         }
 
-        public async Task<IEnumerable<VisitInfo>> GetByCommerce(Guid commerceId, Guid authUserId)
+        public async Task<IEnumerable<VisitInfo>> GetByCommerce(Guid commerceId, Guid commerceUserId, Guid authUserId)
         {
             var user = _unitOfWork.User.Get(authUserId);
             var commerce = _unitOfWork.Commerce.Get(commerceId);
-
-            var wrongCommerce = !(user.Role == Role.Admin || (user.Role == Role.Commerce && commerce?.UserId == authUserId));
+            var wrongCommerce = !(user.Role == Role.Admin || (user.Role == Role.Commerce && commerceUserId == authUserId));
 
             if (wrongCommerce)
             {
-                var error = _errors[BusinessErrorType.WrongCommerce];
-                throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
+                bool? containsCommerce = _unitOfWork.User.ContainsCommerce(commerceUserId, commerceId);
+
+                if (containsCommerce == null)
+                {
+                    var error = _errors[BusinessErrorType.WrongData];
+                    throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
+                }
+
+                if (containsCommerce.Value)
+                {
+                    var error = _errors[BusinessErrorType.WrongCommerce];
+                    throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
+                }
             }
 
             return await _unitOfWork.Visit.GetByCommerce(commerceId);
