@@ -33,7 +33,7 @@ namespace NG.B2B.Presentation.WebAPI.Controllers
         /// </remarks>
         /// <returns>A bool</returns>
         [AuthUserIdFromToken]
-        [HttpGet("{CommerceId}")]
+        [HttpGet("{CommerceId}/{CommerceUserId}")]
         [ProducesResponseType(typeof(ApiError), 543)]
         [ProducesResponseType(typeof(ApiError), (int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
