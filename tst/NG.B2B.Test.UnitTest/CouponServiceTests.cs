@@ -95,7 +95,7 @@ namespace NG.B2B.Test.UnitTest
 
 
             var commerce = new Commerce() { Id = Guid.NewGuid(), UserId = commerceUserId };
-            _unitOfWorkMock.Setup(uow => uow.Coupon.GetCommerce(couponId)).Returns(commerce);
+            _unitOfWorkMock.Setup(uow => uow.Commerce.GetByCoupon(couponId)).Returns(commerce);
 
             var user = new User() { Id = Guid.NewGuid(), Role = DBManager.Infrastructure.Contracts.Models.Enums.Role.Commerce };
             _unitOfWorkMock.Setup(uow => uow.User.Get(user.Id)).Returns(user);
