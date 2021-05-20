@@ -33,14 +33,14 @@ namespace NG.B2B.Presentation.WebAPI.Controllers
         /// </remarks>
         /// <returns>A bool</returns>
         [AuthUserIdFromToken]
-        [HttpGet("{CommerceId}")]
+        [HttpGet("{CommerceId}/{CommerceUserId}")]
         [ProducesResponseType(typeof(ApiError), 543)]
         [ProducesResponseType(typeof(ApiError), (int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetByCommerce(Guid CommerceId,
+        public async Task<IActionResult> GetByCommerce(Guid CommerceId, Guid CommerceUserId,
             Guid AuthUserId = default /* Got from the [AuthUserIdFromToken] filter */)
         {
-            return Ok(await _visitService.GetByCommerce(CommerceId, AuthUserId));
+            return Ok(await _visitService.GetByCommerce(CommerceId, CommerceUserId, AuthUserId));
         }
     }
 }
