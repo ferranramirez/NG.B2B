@@ -74,7 +74,8 @@ namespace NG.B2B.Business.Impl
         {
             var user = _unitOfWork.User.Get(authUserId);
 
-            var wrongCommerce = !(user.Role == Role.Admin || (user.Role == Role.Commerce && commerceUserId == authUserId));
+            var wrongCommerce = !(user.Role == Role.Admin ||
+                (user.Role == Role.Commerce && commerceUserId == authUserId));
 
             if (wrongCommerce)
             {
