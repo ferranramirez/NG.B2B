@@ -47,6 +47,7 @@ namespace NG.B2B.Presentation.WebAPI.Controllers
         /// Return all the coupons for the given commerce.
         /// </summary>
         /// <param name="CommerceId">The Id of the Coupon to validate</param>
+        /// <param name="CommerceUserId">The Id of the User associated to the commerce the Coupon belongs to</param>
         /// <param name="AuthUserId">This value is ignored. The userId is constructed from the authorization token</param>
         /// <remarks>
         /// ## Response code meanings
