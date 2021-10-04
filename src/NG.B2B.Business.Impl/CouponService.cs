@@ -34,7 +34,7 @@ namespace NG.B2B.Business.Impl
                 throw new NotGuiriBusinessException(error.Message, error.ErrorCode);
             }
 
-            var commerce = _unitOfWork.Coupon.GetCommerce(couponId);
+            var commerce = _unitOfWork.Commerce.GetByCoupon(couponId);
             var user = _unitOfWork.User.Get(authUserId);
 
             var isAdmin = user.Role == Role.Admin;
@@ -74,7 +74,8 @@ namespace NG.B2B.Business.Impl
         {
             var user = _unitOfWork.User.Get(authUserId);
 
-            var wrongCommerce = !(user.Role == Role.Admin || (user.Role == Role.Commerce && commerceUserId == authUserId));
+            var wrongCommerce = !(user.Role == Role.Admin ||
+                (user.Role == Role.Commerce && commerceUserId == authUserId));
 
             if (wrongCommerce)
             {
